@@ -97,6 +97,8 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
             return QIcon(":/SqliteKit/icon/ic_database.svg");
         } else if (node->type == "table") {
             return QIcon(":/SqliteKit/icon/ic_table.svg");
+        } else if (node->type == "column") {
+            return QIcon(":/SqliteKit/icon/ic_angle_right.svg"); // Use angle right icon for columns
         }
     }
     
@@ -108,6 +110,10 @@ void TreeModel::buildTree()
     if (!m_db.isOpen())
         return;
     
+    // Set root node name to "数据库"
+    m_root->name = "数据库";
+    m_root->type = "database";
+
     // Get all tables
     QSqlQuery query(m_db);
     if (query.exec("SELECT name FROM sqlite_master WHERE type='table'")) {
@@ -115,6 +121,17 @@ void TreeModel::buildTree()
             QString tableName = query.value(0).toString();
             TreeNode *tableNode = new TreeNode{tableName, "table", {}, m_root};
             m_root->children.append(tableNode);
+            
+            // Get columns for each table
+            QSqlQuery columnQuery(m_db);
+            QString columnSql = QString("PRAGMA table_info(%1)").arg(tableName);
+            if (columnQuery.exec(columnSql)) {
+                while (columnQuery.next()) {
+                    QString columnName = columnQuery.value(1).toString(); // name column
+                    TreeNode *columnNode = new TreeNode{columnName, "column", {}, tableNode};
+                    tableNode->children.append(columnNode);
+                }
+            }
         }
     }
 }
