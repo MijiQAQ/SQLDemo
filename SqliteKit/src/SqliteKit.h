@@ -35,6 +35,9 @@ private slots:
     void onDeleteRow();
     void onPageChanged(int page);
     void onTreeViewDoubleClicked(const QModelIndex &index);
+    void onCheckChanges();
+    void onCancelChanges();
+    void onModelDataChanged(bool hasChanges);
 
 private:
     void setupConnections();
@@ -44,11 +47,13 @@ private:
     void createTableTab(const QString &tableName);
     void switchToTableTab(const QString &tableName);
     bool tableTabExists(const QString &tableName) const;
+    void refreshTreeView();
 
     Ui::SqliteKit *ui;
     QSqlDatabase m_db;
     QHash<QString, TableModel*> m_tableModels;
     TreeModel *m_treeModel;
+    TreeView *m_treeView;
 };
 
 #endif // SQLITEKIT_H

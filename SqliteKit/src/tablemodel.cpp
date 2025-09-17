@@ -127,7 +127,9 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
         return false;
     
     m_data[index.row()][index.column()] = value;
+    m_hasChanges = true;
     emit dataChanged(index, index, {role});
+    emit dataChanged(true);
     
     return true;
 }
@@ -150,6 +152,9 @@ bool TableModel::insertRow(int row, const QModelIndex &parent)
     QVector<QVariant> newRow(m_columnHeaders.size());
     m_data.insert(row, newRow);
     
+    m_hasChanges = true;
+    emit dataChanged(true);
+    
     endInsertRows();
     
     return true;
@@ -162,6 +167,10 @@ bool TableModel::removeRow(int row, const QModelIndex &parent)
     
     beginRemoveRows(parent, row, row);
     m_data.remove(row);
+    
+    m_hasChanges = true;
+    emit dataChanged(true);
+    
     endRemoveRows();
     
     return true;
@@ -176,6 +185,8 @@ bool TableModel::submitAll()
     // TODO: Implement proper database submission logic for insert/update/delete
     // For now, this is a placeholder that just reloads the data
     loadPage(m_currentPage);
+    m_hasChanges = false;
+    emit dataChanged(false);
     return true;
 }
 
@@ -183,6 +194,8 @@ void TableModel::revertAll()
 {
     // Reload current page to discard changes
     loadPage(m_currentPage);
+    m_hasChanges = false;
+    emit dataChanged(false);
 }
 
 void TableModel::updateTotalPages()
@@ -208,4 +221,8 @@ void TableModel::loadColumnHeaders()
             }
         }
     }
+}
+bool TableModel::hasChanges() const
+{
+    return m_hasChanges;
 }

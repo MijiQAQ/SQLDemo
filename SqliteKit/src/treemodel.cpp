@@ -2,6 +2,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QDebug>
+#include <QIcon>
 
 TreeModel::TreeModel(QObject *parent)
     : QAbstractItemModel(parent)
@@ -83,11 +84,23 @@ int TreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid())
         return QVariant();
     
     TreeNode *node = static_cast<TreeNode*>(index.internalPointer());
-    return node->name;
+    
+    if (role == Qt::DisplayRole) {
+        return node->name;
+    } else if (role == Qt::DecorationRole) {
+        // Return icons based on node type
+        if (node->type == "database") {
+            return QIcon(":/SqliteKit/icon/ic_database.svg");
+        } else if (node->type == "table") {
+            return QIcon(":/SqliteKit/icon/ic_table.svg");
+        }
+    }
+    
+    return QVariant();
 }
 
 void TreeModel::buildTree()

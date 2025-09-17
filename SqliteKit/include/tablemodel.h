@@ -32,6 +32,11 @@ public:
     bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool submitAll();
     void revertAll();
+    
+    bool hasChanges() const;
+    
+signals:
+    void dataChanged(bool hasChanges);
 
 private:
     void updateTotalPages();
@@ -44,6 +49,7 @@ private:
     int m_currentPage = 1;
     int m_totalPages = 1;
     int m_pageSize = 1000;
+    bool m_hasChanges = false;
 };
 
 #endif // TABLEMODEL_H

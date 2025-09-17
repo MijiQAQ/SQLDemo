@@ -15,7 +15,16 @@ SqliteKit::SqliteKit(QWidget *parent, const QSqlDatabase &db)
     
     // Setup tree model
     m_treeModel->setDatabase(m_db);
-    ui->treeView_database->setModel(m_treeModel);
+    
+    // Create tree view and add to widget_database
+    m_treeView = new TreeView(ui->widget_database);
+    m_treeView->setModel(m_treeModel);
+    m_treeView->setObjectName("treeView_database");
+    
+    QVBoxLayout *layout = new QVBoxLayout(ui->widget_database);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(m_treeView);
+    ui->widget_database->setLayout(layout);
     
     setupConnections();
 }
@@ -42,14 +51,20 @@ void SqliteKit::setupConnections()
     connect(ui->toolButton_refresh, &QToolButton::clicked, this, &SqliteKit::onRefresh);
     connect(ui->toolButton_add, &QToolButton::clicked, this, &SqliteKit::onAddRow);
     connect(ui->toolButton_subtract, &QToolButton::clicked, this, &SqliteKit::onDeleteRow);
+    connect(ui->toolButton_check, &QToolButton::clicked, this, &SqliteKit::onCheckChanges);
+    connect(ui->toolButton_cancel, &QToolButton::clicked, this, &SqliteKit::onCancelChanges);
     
     // Connect page spinbox
     connect(ui->spinBox_currentPage, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &SqliteKit::onPageChanged);
     
     // Connect tree view double click
-    connect(ui->treeView_database, &QTreeView::doubleClicked,
+    connect(m_treeView, &QTreeView::doubleClicked,
             this, &SqliteKit::onTreeViewDoubleClicked);
+    
+    // Initially disable check and cancel buttons
+    ui->toolButton_check->setEnabled(false);
+    ui->toolButton_cancel->setEnabled(false);
 }
 
 void SqliteKit::onFirstPage()
@@ -121,8 +136,8 @@ void SqliteKit::onDeleteRow()
         if (!selected.isEmpty()) {
             int row = selected.first().row();
             if (model->removeRow(row)) {
-                model->submitAll();
-                onRefresh(); // Refresh to update pagination
+                // Changes are tracked, user can submit or cancel later
+                // Pagination will be updated when changes are submitted or reverted
             }
         }
     }
@@ -139,7 +154,7 @@ void SqliteKit::onPageChanged(int page)
 
 void SqliteKit::onTreeViewDoubleClicked(const QModelIndex &index)
 {
-    TreeModel *model = qobject_cast<TreeModel*>(ui->treeView_database->model());
+    TreeModel *model = qobject_cast<TreeModel*>(m_treeView->model());
     if (!model) {
         return;
     }
@@ -211,6 +226,9 @@ void SqliteKit::createTableTab(const QString &tableName)
     model->setTable(tableName, m_db);
     tableView->setModel(model);
     
+    // Connect data changed signal
+    connect(model, &TableModel::dataChanged, this, &SqliteKit::onModelDataChanged);
+    
     // Store model reference
     m_tableModels.insert(tableName, model);
     
@@ -243,3 +261,38 @@ bool SqliteKit::tableTabExists(const QString &tableName) const
     return false;
 }
 
+void SqliteKit::refreshTreeView()
+{
+    if (m_treeModel) {
+        m_treeModel->setDatabase(m_db);
+    }
+}
+
+void SqliteKit::onCheckChanges()
+{
+    TableModel *model = currentTableModel();
+    if (model && model->submitAll()) {
+        // Changes saved successfully
+        ui->toolButton_check->setEnabled(false);
+        ui->toolButton_cancel->setEnabled(false);
+        refreshTreeView();
+    }
+}
+
+void SqliteKit::onCancelChanges()
+{
+    TableModel *model = currentTableModel();
+    if (model) {
+        model->revertAll();
+        ui->toolButton_check->setEnabled(false);
+        ui->toolButton_cancel->setEnabled(false);
+        refreshTreeView();
+    }
+}
+
+
+void SqliteKit::onModelDataChanged(bool hasChanges)
+{
+    ui->toolButton_check->setEnabled(hasChanges);
+    ui->toolButton_cancel->setEnabled(hasChanges);
+}
