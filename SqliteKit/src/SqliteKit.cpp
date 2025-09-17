@@ -242,3 +242,4 @@ bool SqliteKit::tableTabExists(const QString &tableName) const
     }
     return false;
 }
+

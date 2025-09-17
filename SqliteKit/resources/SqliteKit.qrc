@@ -7,5 +7,9 @@
         <file>icon/ic_angles_right.svg</file>
         <file>icon/ic_refresh.svg</file>
         <file>icon/ic_subtract.svg</file>
+        <file>icon/ic_check.svg</file>
+        <file>icon/ic_cancel.svg</file>
+        <file>icon/ic_database.svg</file>
+        <file>icon/ic_table.svg</file>
     </qresource>
 </RCC>
