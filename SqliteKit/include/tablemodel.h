@@ -28,8 +28,8 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    bool insertRow(int row, const QModelIndex &parent = QModelIndex()) override;
-    bool removeRow(int row, const QModelIndex &parent = QModelIndex()) override;
+    bool insertRow(int row, const QModelIndex &parent = QModelIndex());
+    bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool submitAll();
     void revertAll();
 

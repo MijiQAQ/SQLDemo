@@ -1,5 +1,6 @@
 #include "../include/treemodel.h"
 #include <QSqlQuery>
+#include <QSqlRecord>
 #include <QDebug>
 
 TreeModel::TreeModel(QObject *parent)

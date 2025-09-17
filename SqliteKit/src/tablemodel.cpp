@@ -1,6 +1,7 @@
 #include "../include/tablemodel.h"
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QSqlRecord>
 #include <QDebug>
 
 TableModel::TableModel(QObject *parent)

@@ -173,7 +173,7 @@ void SqliteKit::updatePageControls()
 
 TableModel* SqliteKit::currentTableModel() const
 {
-    QWidget *currentTab = ui->tabWidget->currentWidget();
+    QWidget *currentTab = ui->tabWidget_database->currentWidget();
     if (currentTab) {
         QTableView *tableView = currentTab->findChild<QTableView*>();
         if (tableView) {
@@ -185,7 +185,7 @@ TableModel* SqliteKit::currentTableModel() const
 
 QTableView* SqliteKit::currentTableView() const
 {
-    QWidget *currentTab = ui->tabWidget->currentWidget();
+    QWidget *currentTab = ui->tabWidget_database->currentWidget();
     if (currentTab) {
         return currentTab->findChild<TableView*>();
     }
@@ -215,8 +215,8 @@ void SqliteKit::createTableTab(const QString &tableName)
     m_tableModels.insert(tableName, model);
     
     // Add tab
-    int tabIndex = ui->tabWidget->addTab(tab, tableName);
-    ui->tabWidget->setCurrentIndex(tabIndex);
+    int tabIndex = ui->tabWidget_database->addTab(tab, tableName);
+    ui->tabWidget_database->setCurrentIndex(tabIndex);
     
     // Update page controls
     updatePageControls();
@@ -224,9 +224,9 @@ void SqliteKit::createTableTab(const QString &tableName)
 
 void SqliteKit::switchToTableTab(const QString &tableName)
 {
-    for (int i = 0; i < ui->tabWidget->count(); ++i) {
-        if (ui->tabWidget->tabText(i) == tableName) {
-            ui->tabWidget->setCurrentIndex(i);
+    for (int i = 0; i < ui->tabWidget_database->count(); ++i) {
+        if (ui->tabWidget_database->tabText(i) == tableName) {
+            ui->tabWidget_database->setCurrentIndex(i);
             updatePageControls();
             return;
         }
@@ -235,8 +235,8 @@ void SqliteKit::switchToTableTab(const QString &tableName)
 
 bool SqliteKit::tableTabExists(const QString &tableName) const
 {
-    for (int i = 0; i < ui->tabWidget->count(); ++i) {
-        if (ui->tabWidget->tabText(i) == tableName) {
+    for (int i = 0; i < ui->tabWidget_database->count(); ++i) {
+        if (ui->tabWidget_database->tabText(i) == tableName) {
             return true;
         }
     }

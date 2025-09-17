@@ -6,7 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlerror>
 #include <QRandomGenerator>
-#include "./SqliteKit/src/SqliteKit.h"
+#include "SqliteKit/src/SqliteKit.h"
 
 SQLDemo::SQLDemo(QWidget *parent) : QMainWindow(parent), ui(new Ui::SQLDemo) {
     ui->setupUi(this);
