@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/SqliteKit">
+        <file>icon/ic_add.svg</file>
+        <file>icon/ic_angle_left.svg</file>
+        <file>icon/ic_angle_right.svg</file>
+        <file>icon/ic_angles_left.svg</file>
+        <file>icon/ic_angles_right.svg</file>
+        <file>icon/ic_refresh.svg</file>
+        <file>icon/ic_subtract.svg</file>
+    </qresource>
+</RCC>
