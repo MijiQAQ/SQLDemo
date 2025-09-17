@@ -128,7 +128,6 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     
     m_data[index.row()][index.column()] = value;
     m_hasChanges = true;
-    emit dataChanged(index, index, {role});
     emit dataChanged(true);
     
     return true;
