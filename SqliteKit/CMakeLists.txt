@@ -48,10 +48,10 @@ target_link_libraries(SqliteKit PUBLIC
 # 添加核心模块源文件
 target_sources(SqliteKit PRIVATE
     src/SqliteKit.h src/SqliteKit.cpp
-    include/tablemodel.h src/tablemodel.cpp
-    include/treemodel.h src/treemodel.cpp
-    include/tableview.h src/tableview.cpp
-    include/treeview.h src/treeview.cpp
+    # include/tablemodel.h src/tablemodel.cpp
+    # include/treemodel.h src/treemodel.cpp
+    # include/tableview.h src/tableview.cpp
+    # include/treeview.h src/treeview.cpp
     resources/ui/SqliteKit.ui
 )
 

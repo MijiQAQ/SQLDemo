@@ -6,10 +6,6 @@
 #include <QItemSelection>
 #include <QTabWidget>
 #include <QTableView>
-#include "../include/tablemodel.h"
-#include "../include/treemodel.h"
-#include "../include/tableview.h"
-#include "../include/treeview.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,34 +22,10 @@ public:
     ~SqliteKit();
 
 private slots:
-    void onFirstPage();
-    void onPrevPage();
-    void onNextPage();
-    void onLastPage();
-    void onRefresh();
-    void onAddRow();
-    void onDeleteRow();
-    void onPageChanged(int page);
-    void onTreeViewDoubleClicked(const QModelIndex &index);
-    void onCheckChanges();
-    void onCancelChanges();
-    void onModelDataChanged(bool hasChanges);
 
 private:
-    void setupConnections();
-    void updatePageControls();
-    TableModel* currentTableModel() const;
-    QTableView* currentTableView() const;
-    void createTableTab(const QString &tableName);
-    void switchToTableTab(const QString &tableName);
-    bool tableTabExists(const QString &tableName) const;
-    void refreshTreeView();
-
     Ui::SqliteKit *ui;
     QSqlDatabase m_db;
-    QHash<QString, TableModel*> m_tableModels;
-    TreeModel *m_treeModel;
-    TreeView *m_treeView;
 };
 
 #endif // SQLITEKIT_H
